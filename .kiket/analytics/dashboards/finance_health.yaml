@@ -1,0 +1,184 @@
+model_version: "1.0"
+dashboard:
+  id: finance-health
+  name: Finance Health
+  description: Track expense approvals, budget utilization, and financial operations.
+  widgets:
+    - id: pending-approvals-kpi
+      type: kpi
+      title: Pending Approvals
+      query: fct_expense_status
+      query_config:
+        model: fct_expense_status
+        parameters:
+          - name: project_id
+            type: integer
+            required: true
+        filters:
+          project_id: ":project_id"
+          status: pending
+      options:
+        comparison:
+          interval: "7d"
+
+    - id: total-pending-value-kpi
+      type: kpi
+      title: Pending Approval Value
+      query: fct_expense_status
+      query_config:
+        model: fct_expense_status
+        parameters:
+          - name: project_id
+            type: integer
+            required: true
+        filters:
+          project_id: ":project_id"
+          status: pending
+      options:
+        format: currency
+
+    - id: approval-cycle-trend
+      type: timeseries
+      title: Average Approval Time (Days)
+      query: fct_expense_cycle
+      query_config:
+        model: fct_expense_cycle
+        parameters:
+          - name: project_id
+            type: integer
+            required: true
+        filters:
+          project_id: ":project_id"
+        order_by:
+          - approval_week
+      visualization:
+        x: approval_week
+        y: avg_approval_days
+
+    - id: budget-utilization
+      type: leaderboard
+      title: Budget Utilization by Department
+      query: fct_budget_utilization
+      query_config:
+        model: fct_budget_utilization
+        parameters:
+          - name: project_id
+            type: integer
+            required: true
+        filters:
+          project_id: ":project_id"
+      visualization:
+        group_by: department
+        value: utilization_percentage
+        format: percentage
+
+    - id: expenses-by-category
+      type: leaderboard
+      title: Expenses by Category
+      query: fct_expense_breakdown
+      query_config:
+        model: fct_expense_breakdown
+        parameters:
+          - name: project_id
+            type: integer
+            required: true
+        filters:
+          project_id: ":project_id"
+      visualization:
+        group_by: category
+        value: total_amount
+        format: currency
+
+    - id: monthly-spend-trend
+      type: timeseries
+      title: Monthly Spend Trend
+      query: fct_expense_trend
+      query_config:
+        model: fct_expense_trend
+        parameters:
+          - name: project_id
+            type: integer
+            required: true
+        filters:
+          project_id: ":project_id"
+        order_by:
+          - expense_month
+      visualization:
+        x: expense_month
+        y: total_spend
+        format: currency
+        series: category
+
+    - id: approval-bottlenecks
+      type: table
+      title: Approval Bottlenecks (Pending > 5 Days)
+      query: fct_expense_pending
+      query_config:
+        model: fct_expense_pending
+        parameters:
+          - name: project_id
+            type: integer
+            required: true
+        filters:
+          project_id: ":project_id"
+          days_pending_gt: 5
+        select:
+          - expense_title
+          - submitter_name
+          - amount
+          - category
+          - days_pending
+          - current_approver
+        order_by:
+          - days_pending DESC
+        limit: 15
+
+    - id: budget-vs-actual
+      type: table
+      title: Budget vs Actual by Department
+      query: fct_budget_comparison
+      query_config:
+        model: fct_budget_comparison
+        parameters:
+          - name: project_id
+            type: integer
+            required: true
+        filters:
+          project_id: ":project_id"
+        select:
+          - department
+          - budget_amount
+          - actual_spend
+          - variance
+          - variance_percentage
+        order_by:
+          - variance_percentage DESC
+
+  alerts:
+    - query: fct_budget_utilization
+      query_config:
+        model: fct_budget_utilization
+        parameters:
+          - name: project_id
+            type: integer
+            required: true
+        filters:
+          project_id: ":project_id"
+      condition: utilization_percentage > 0.90
+      notify_roles:
+        - manager
+      message: "Department budget utilization exceeds 90%"
+
+    - query: fct_expense_pending
+      query_config:
+        model: fct_expense_pending
+        parameters:
+          - name: project_id
+            type: integer
+            required: true
+        filters:
+          project_id: ":project_id"
+      condition: days_pending > 10
+      notify_roles:
+        - manager
+      message: "Expense requests pending for more than 10 days"
