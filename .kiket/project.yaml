@@ -1,0 +1,12 @@
+model_version: "1.0"
+project:
+  id: finance
+  name: Finance & Administration
+  version: 1.0.0
+  description: Expense approval and financial operations workflows.
+
+  extensions:
+    required:
+      - email
+    optional:
+      - slack

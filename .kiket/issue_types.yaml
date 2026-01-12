@@ -1,0 +1,29 @@
+model_version: "1.0"
+
+issue_types:
+  expense:
+    name: Expense
+    description: Expense submission for approval
+    icon: "💰"
+    color: "#EF4444"
+    workflow: expense
+    fields:
+      - key: amount
+        type: number
+        label: Amount ($)
+        required: true
+      - key: category
+        type: enum
+        label: Category
+        options: [travel, software, equipment, marketing, professional_services, other]
+        required: true
+      - key: vendor
+        type: string
+        label: Vendor
+      - key: receipt_url
+        type: url
+        label: Receipt URL
+      - key: expense_date
+        type: date
+        label: Expense Date
+        required: true

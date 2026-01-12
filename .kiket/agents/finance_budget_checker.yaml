@@ -1,0 +1,68 @@
+model_version: "1.0"
+id: ai.finance.budget_checker
+version: 1.0.0
+name: Budget Checker
+description: Check expense against department budget.
+
+prompt: |
+  Check this expense against available budget.
+
+  **Expense:**
+  - Amount: ${{issue.custom_fields.amount}}
+  - Category: {{issue.custom_fields.category}}
+  - Department: {{issue.custom_fields.department}}
+  - Cost Center: {{issue.custom_fields.cost_center}}
+
+  **Budget Status:**
+  - Department: {{context.department_budget.name}}
+  - Total Budget: ${{context.department_budget.total}}
+  - Spent YTD: ${{context.department_budget.spent}}
+  - Remaining: ${{context.department_budget.remaining}}
+  - Category Allocation: ${{context.category_allocation}}
+  - Category Spent: ${{context.category_spent}}
+
+  **Recent Expenses (same category):**
+  {{#each context.recent_expenses}}
+  - ${{this.amount}}: {{this.description}} ({{this.date}})
+  {{/each}}
+
+  Analyze and return:
+  - within_budget: true/false
+  - budget_impact: Percentage of remaining budget this represents
+  - category_status: under/near/over budget
+  - forecast_concern: true/false (will dept exceed budget at current pace?)
+  - recommendation: approve/flag/escalate
+  - notes: Context for approvers
+
+capabilities:
+  - budget_analysis
+  - financial_forecasting
+
+context:
+  required:
+    - analytics
+    - budget_data
+
+human_in_loop:
+  required: false
+
+metadata:
+  output_format: json
+  max_tokens: 600
+  schema:
+    type: object
+    properties:
+      within_budget:
+        type: boolean
+      budget_impact:
+        type: number
+      category_status:
+        type: string
+        enum: [under, near, over]
+      forecast_concern:
+        type: boolean
+      recommendation:
+        type: string
+        enum: [approve, flag, escalate]
+      notes:
+        type: string

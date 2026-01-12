@@ -1,0 +1,130 @@
+model_version: "1.0"
+intake:
+  id: expense-request
+  name: Expense Request
+  description: Submit an expense for reimbursement.
+  version: 1.0.0
+
+  public: false
+  slug: expenses/submit
+
+  branding:
+    title: "Expense Reimbursement"
+    subtitle: "Submit your expense for approval and reimbursement."
+
+  issue:
+    type: expense
+    workflow: expense
+    initial_state: submitted
+    title_template: "[Expense] {{title}} - ${{amount}}"
+
+  fields:
+    - key: title
+      type: string
+      label: Expense Description
+      placeholder: "Brief description of the expense"
+      required: true
+      max_length: 200
+      map_to: title
+
+    - key: amount
+      type: number
+      label: Amount ($)
+      placeholder: "0.00"
+      required: true
+      min: 0.01
+      step: 0.01
+      map_to: custom_fields.amount
+
+    - key: category
+      type: enum
+      label: Expense Category
+      required: true
+      options:
+        - value: travel
+          label: "Travel"
+        - value: meals
+          label: "Meals & Entertainment"
+        - value: supplies
+          label: "Office Supplies"
+        - value: software
+          label: "Software / Subscriptions"
+        - value: equipment
+          label: "Equipment"
+        - value: training
+          label: "Training / Education"
+        - value: other
+          label: "Other"
+      map_to: custom_fields.category
+
+    - key: expense_date
+      type: date
+      label: Expense Date
+      required: true
+      map_to: custom_fields.expense_date
+
+    - key: vendor
+      type: string
+      label: Vendor / Merchant
+      placeholder: "Name of vendor or merchant"
+      required: true
+      map_to: custom_fields.vendor
+
+    - key: department
+      type: enum
+      label: Department
+      required: true
+      options:
+        - value: engineering
+          label: "Engineering"
+        - value: product
+          label: "Product"
+        - value: marketing
+          label: "Marketing"
+        - value: sales
+          label: "Sales"
+        - value: operations
+          label: "Operations"
+        - value: finance
+          label: "Finance"
+        - value: hr
+          label: "Human Resources"
+      map_to: custom_fields.department
+
+    - key: cost_center
+      type: string
+      label: Cost Center (optional)
+      placeholder: "If known"
+      required: false
+      map_to: custom_fields.cost_center
+
+    - key: description
+      type: text
+      label: Business Purpose
+      placeholder: "Explain the business purpose of this expense"
+      required: true
+      map_to: description
+
+    - key: receipts
+      type: file
+      label: Receipts
+      required: true
+      multiple: true
+      max_size: 10MB
+      accept: ".pdf,.png,.jpg,.jpeg"
+
+  confirmation:
+    title: "Expense Submitted"
+    message: |
+      Your expense request has been submitted for approval.
+
+      **Expense ID:** #{{issue.id}}
+      **Amount:** ${{amount}}
+
+      You'll be notified when your expense is approved or if more information is needed.
+
+  notifications:
+    on_submit:
+      - type: slack
+        channel: "#finance-expenses"
+        message: "💳 New expense: {{title}} - ${{amount}} ({{category}})"

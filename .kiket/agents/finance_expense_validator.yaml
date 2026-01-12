@@ -1,0 +1,68 @@
+model_version: "1.0"
+id: ai.finance.expense_validator
+version: 1.0.0
+name: Expense Validator
+description: Validate expense requests for policy compliance.
+
+prompt: |
+  Validate this expense request against company policy.
+
+  **Expense Request:**
+  - Title: {{issue.title}}
+  - Amount: ${{issue.custom_fields.amount}}
+  - Category: {{issue.custom_fields.category}}
+  - Date: {{issue.custom_fields.expense_date}}
+  - Vendor: {{issue.custom_fields.vendor}}
+  - Description: {{issue.description}}
+  - Receipts: {{issue.custom_fields.has_receipts}}
+
+  **Expense Policy:**
+  {{context.expense_policy}}
+
+  **Category Limits:**
+  {{#each context.category_limits}}
+  - {{this.category}}: ${{this.limit}} per {{this.period}}
+  {{/each}}
+
+  Validate and return:
+  - compliant: true/false
+  - issues: Array of policy violations or concerns
+  - warnings: Array of items to verify
+  - receipt_required: true/false
+  - approval_level: standard/manager/finance/executive
+  - notes: Additional context
+
+capabilities:
+  - expense_validation
+  - policy_compliance
+
+context:
+  required:
+    - documents
+
+human_in_loop:
+  required: false
+
+metadata:
+  output_format: json
+  max_tokens: 600
+  schema:
+    type: object
+    properties:
+      compliant:
+        type: boolean
+      issues:
+        type: array
+        items:
+          type: string
+      warnings:
+        type: array
+        items:
+          type: string
+      receipt_required:
+        type: boolean
+      approval_level:
+        type: string
+        enum: [standard, manager, finance, executive]
+      notes:
+        type: string

@@ -1,0 +1,165 @@
+model_version: "1.0"
+workflow:
+  id: expense
+  name: Expense Approval
+  version: 1.0.0
+  description: Expense request and approval workflow.
+
+states:
+  submitted:
+    type: initial
+    category: pending
+    metadata:
+      label: Submitted
+      color: secondary
+      icon: "📝"
+      description: Expense request submitted.
+    on_enter:
+      - action: ai_analyze
+        agent: ai.finance.expense_validator
+        store_result_in: custom_fields.validation_result
+      - action: ai_analyze
+        agent: ai.finance.budget_checker
+        store_result_in: custom_fields.budget_status
+
+  pending_approval:
+    type: active
+    category: review
+    metadata:
+      label: Pending Approval
+      color: warning
+      icon: "⏳"
+      description: Awaiting manager approval.
+    approval:
+      required: 1
+      approvers:
+        - role: manager
+      conditions:
+        - field: custom_fields.amount
+          operator: lte
+          value: 1000
+    sla:
+      warning: 48h
+      breach: 72h
+      business_hours: true
+
+  finance_review:
+    type: active
+    category: review
+    metadata:
+      label: Finance Review
+      color: info
+      icon: "🔍"
+      description: Under finance team review.
+    approval:
+      required: 1
+      approvers:
+        - role: finance
+    sla:
+      warning: 24h
+      breach: 48h
+      business_hours: true
+
+  executive_approval:
+    type: active
+    category: review
+    metadata:
+      label: Executive Approval
+      color: primary
+      icon: "👔"
+      description: Requires executive approval.
+    approval:
+      required: 1
+      approvers:
+        - role: executive
+    conditions:
+      - field: custom_fields.amount
+        operator: gt
+        value: 5000
+
+  approved:
+    type: active
+    category: active
+    metadata:
+      label: Approved
+      color: success
+      icon: "✅"
+      description: Expense approved, pending reimbursement.
+    on_enter:
+      - action: notify
+        recipients:
+          user: submitter
+        message: "✅ Your expense request for ${{issue.custom_fields.amount}} has been approved."
+        level: success
+
+  reimbursed:
+    type: final
+    category: completed
+    metadata:
+      label: Reimbursed
+      color: success
+      icon: "💰"
+      description: Expense reimbursed.
+    on_enter:
+      - action: notify
+        recipients:
+          user: submitter
+        message: "💰 Your expense of ${{issue.custom_fields.amount}} has been reimbursed."
+
+  rejected:
+    type: final
+    category: completed
+    metadata:
+      label: Rejected
+      color: danger
+      icon: "❌"
+      description: Expense request rejected.
+    on_enter:
+      - action: notify
+        recipients:
+          user: submitter
+        message: "❌ Your expense request has been rejected. Reason: {{issue.custom_fields.rejection_reason}}"
+
+transitions:
+  - from: submitted
+    to: pending_approval
+    name: Submit for Approval
+    conditions:
+      - field: custom_fields.amount
+        operator: lte
+        value: 5000
+  - from: submitted
+    to: finance_review
+    name: Send to Finance
+    conditions:
+      - field: custom_fields.amount
+        operator: gt
+        value: 5000
+  - from: pending_approval
+    to: approved
+    name: Approve
+  - from: pending_approval
+    to: rejected
+    name: Reject
+  - from: finance_review
+    to: executive_approval
+    name: Escalate to Executive
+    conditions:
+      - field: custom_fields.amount
+        operator: gt
+        value: 10000
+  - from: finance_review
+    to: approved
+    name: Approve
+  - from: finance_review
+    to: rejected
+    name: Reject
+  - from: executive_approval
+    to: approved
+    name: Approve
+  - from: executive_approval
+    to: rejected
+    name: Reject
+  - from: approved
+    to: reimbursed
+    name: Mark Reimbursed
