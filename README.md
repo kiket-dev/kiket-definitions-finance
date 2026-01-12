@@ -10,6 +10,7 @@ This definition provides finance operations workflows including:
 - **AI Agents**: Expense validation, budget checking
 - **Intake Form**: Internal expense submission
 - **Board**: Expense approval board with category swimlanes
+- **Analytics**: Budget utilization, approval cycle time, expense breakdown, bottlenecks
 
 ## Structure
 
@@ -24,8 +25,11 @@ This definition provides finance operations workflows including:
 │   └── finance_budget_checker.yaml
 ├── intakes/
 │   └── expense_request.yaml
-└── boards/
-    └── finance.yaml
+├── boards/
+│   └── finance.yaml
+└── analytics/
+    └── dashboards/
+        └── finance_health.yaml
 ```
 
 ## Installation
