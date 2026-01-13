@@ -2,88 +2,89 @@ model_version: "1.0"
 board:
   id: expenses-board
   name: Expense Approvals
+  type: kanban
   description: Expense request and approval tracking.
-  version: 1.0.0
+  workflow: expense
 
-  filters:
-    issue_types:
-      - expense
-    workflows:
-      - expense
+filters:
+  issue_types:
+    - expense
+  workflows:
+    - expense
 
-  columns:
-    - id: submitted
-      name: Submitted
-      states:
-        - submitted
-      wip_limit: null
-      color: secondary
+columns:
+  - key: submitted
+    name: Submitted
+    states:
+      - submitted
+    color: secondary
 
-    - id: pending_approval
-      name: Pending Approval
-      states:
-        - pending_approval
-      wip_limit: null
-      color: warning
+  - key: pending_approval
+    name: Pending Approval
+    states:
+      - pending_approval
+    color: warning
 
-    - id: finance_review
-      name: Finance Review
-      states:
-        - finance_review
-      wip_limit: null
-      color: info
+  - key: finance_review
+    name: Finance Review
+    states:
+      - finance_review
+    color: info
 
-    - id: executive
-      name: Executive Approval
-      states:
-        - executive_approval
-      wip_limit: null
-      color: primary
+  - key: executive
+    name: Executive Approval
+    states:
+      - executive_approval
+    color: primary
 
-    - id: approved
-      name: Approved
-      states:
-        - approved
-      wip_limit: null
-      color: success
+  - key: approved
+    name: Approved
+    states:
+      - approved
+    color: success
 
-    - id: reimbursed
-      name: Reimbursed
-      states:
-        - reimbursed
-      wip_limit: null
-      color: success
+  - key: reimbursed
+    name: Reimbursed
+    states:
+      - reimbursed
+    color: success
 
-  swimlanes:
-    enabled: true
-    field: custom_fields.category
-    values:
-      - value: travel
-        label: "✈️ Travel"
-      - value: meals
-        label: "🍽️ Meals"
-      - value: software
-        label: "💻 Software"
-      - value: equipment
-        label: "🖥️ Equipment"
-      - value: other
-        label: "📦 Other"
+swimlanes:
+  enabled: true
+  field: custom_fields.category
+  values:
+    - value: travel
+      label: "✈️ Travel"
+    - value: meals
+      label: "🍽️ Meals"
+    - value: software
+      label: "💻 Software"
+    - value: equipment
+      label: "🖥️ Equipment"
+    - value: other
+      label: "📦 Other"
 
-  card_fields:
-    - title
-    - custom_fields.amount
-    - custom_fields.category
-    - custom_fields.department
-    - created_by
-    - sla_status
+card_template:
+  size: compact
+  fields:
+    primary:
+      - title
+      - created_by
+    secondary:
+      - custom_fields.amount
+      - custom_fields.category
+      - custom_fields.department
+      - sla_status
+  badges:
+    - type: comments_count
 
-  quick_filters:
-    - field: custom_fields.amount_gte
-      label: Over $1000
-      value: 1000
-    - field: sla_status
-      label: SLA At Risk
-      values: [warning, breached]
-    - field: custom_fields.department
-      label: Engineering
-      value: engineering
+quick_filters:
+  - field: custom_fields.amount_gte
+    label: Over $1000
+    value: 1000
+  - field: sla_status
+    label: SLA At Risk
+    values: [warning, breached]
+  - field: custom_fields.department
+    label: Engineering
+    value: engineering
