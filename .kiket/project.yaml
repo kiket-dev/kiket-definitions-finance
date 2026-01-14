@@ -5,6 +5,15 @@ project:
   version: 1.0.0
   description: Expense approval and financial operations workflows.
 
+  team:
+    roles:
+      - name: accountant
+        description: Accountant handling transactions and reconciliation
+      - name: analyst
+        description: Financial analyst preparing reports and forecasts
+      - name: controller
+        description: Controller overseeing financial operations and approvals
+
   extensions:
     required:
       - email
