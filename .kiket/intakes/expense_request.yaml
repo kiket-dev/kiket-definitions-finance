@@ -1,5 +1,5 @@
 model_version: "1.0"
-intake:
+intake_form:
   id: expense-request
   name: Expense Request
   description: Submit an expense for reimbursement.

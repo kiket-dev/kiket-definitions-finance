@@ -1,6 +1,6 @@
 model_version: "1.0"
 project:
-  id: finance
+  key: FINANCE
   name: Finance & Administration
   version: 1.0.0
   description: Expense approval and financial operations workflows.
