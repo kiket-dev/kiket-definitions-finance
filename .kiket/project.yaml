@@ -24,7 +24,7 @@ project:
     issues:
       - title: Q1 cloud infrastructure invoice from GCP
         description: Google Cloud Platform invoice for January-March compute, storage, and networking services. Total $47,230.
-        issue_type: invoice
+        case_type: invoice
         status: finance_review
         priority: high
         labels:
@@ -33,7 +33,7 @@ project:
 
       - title: Conference travel reimbursement - RailsConf 2026
         description: Flight, hotel, and meal expenses for two engineers attending RailsConf in Portland. Total $3,840.
-        issue_type: expense
+        case_type: expense
         status: pending_approval
         priority: medium
         labels:
@@ -42,7 +42,7 @@ project:
 
       - title: Budget request for new APM tooling licenses
         description: Requesting $18,000 annual budget for Datadog APM licenses to replace self-hosted monitoring stack.
-        issue_type: budget_request
+        case_type: budget_request
         status: executive_approval
         priority: high
         labels:
@@ -51,7 +51,7 @@ project:
 
       - title: Office supplies reimbursement - ergonomic keyboards
         description: Bulk purchase of 12 ergonomic keyboards for the engineering team. Total $1,440.
-        issue_type: expense
+        case_type: expense
         status: approved
         priority: low
         labels:
@@ -60,7 +60,7 @@ project:
 
       - title: Contractor invoice - security audit by PenTest Corp
         description: Final invoice for the Q4 penetration testing engagement covering API and infrastructure assessments.
-        issue_type: invoice
+        case_type: invoice
         status: submitted
         priority: high
         labels:
@@ -69,7 +69,7 @@ project:
 
       - title: Annual Figma Enterprise subscription renewal
         description: Renewal of 25-seat Figma Enterprise plan for the design and product teams. Total $7,500.
-        issue_type: expense
+        case_type: expense
         status: reimbursed
         priority: medium
         labels:

@@ -7,7 +7,7 @@ board:
   workflow: expense
 
 filters:
-  issue_types:
+  case_types:
     - expense
   workflows:
     - expense
