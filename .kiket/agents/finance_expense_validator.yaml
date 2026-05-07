@@ -11,13 +11,13 @@ agent:
         Validate this expense request against company policy.
 
         **Expense Request:**
-        - Title: {{issue.title}}
-        - Amount: ${{issue.custom_fields.amount}}
-        - Category: {{issue.custom_fields.category}}
-        - Date: {{issue.custom_fields.expense_date}}
-        - Vendor: {{issue.custom_fields.vendor}}
-        - Description: {{issue.description}}
-        - Receipts: {{issue.custom_fields.has_receipts}}
+        - Title: {{case.title}}
+        - Amount: ${{case.custom_fields.amount}}
+        - Category: {{case.custom_fields.category}}
+        - Date: {{case.custom_fields.expense_date}}
+        - Vendor: {{case.custom_fields.vendor}}
+        - Description: {{case.description}}
+        - Receipts: {{case.custom_fields.has_receipts}}
 
         **Expense Policy:**
         {{context.expense_policy}}

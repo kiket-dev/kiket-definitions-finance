@@ -11,10 +11,10 @@ agent:
         Check this expense against available budget.
 
         **Expense:**
-        - Amount: ${{issue.custom_fields.amount}}
-        - Category: {{issue.custom_fields.category}}
-        - Department: {{issue.custom_fields.department}}
-        - Cost Center: {{issue.custom_fields.cost_center}}
+        - Amount: ${{case.custom_fields.amount}}
+        - Category: {{case.custom_fields.category}}
+        - Department: {{case.custom_fields.department}}
+        - Cost Center: {{case.custom_fields.cost_center}}
 
         **Budget Status:**
         - Department: {{context.department_budget.name}}

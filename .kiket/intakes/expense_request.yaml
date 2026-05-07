@@ -118,7 +118,7 @@ intake_form:
     message: |
       Your expense request has been submitted for approval.
 
-      **Expense ID:** #{{issue.id}}
+      **Expense ID:** #{{case.id}}
       **Amount:** ${{amount}}
 
       You'll be notified when your expense is approved or if more information is needed.

@@ -89,7 +89,7 @@ states:
       - action: notify
         recipients:
           user: submitter
-        message: "✅ Your expense request for ${{issue.custom_fields.amount}} has been approved."
+        message: "✅ Your expense request for ${{case.custom_fields.amount}} has been approved."
         level: success
 
   reimbursed:
@@ -104,7 +104,7 @@ states:
       - action: notify
         recipients:
           user: submitter
-        message: "💰 Your expense of ${{issue.custom_fields.amount}} has been reimbursed."
+        message: "💰 Your expense of ${{case.custom_fields.amount}} has been reimbursed."
 
   rejected:
     type: final
@@ -118,7 +118,7 @@ states:
       - action: notify
         recipients:
           user: submitter
-        message: "❌ Your expense request has been rejected. Reason: {{issue.custom_fields.rejection_reason}}"
+        message: "❌ Your expense request has been rejected. Reason: {{case.custom_fields.rejection_reason}}"
 
 transitions:
   - from: submitted

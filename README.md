@@ -10,13 +10,13 @@ This definition provides finance operations workflows including:
 - **AI Agents**: Expense validation, budget checking
 - **Intake Form**: Internal expense submission
 - **Board**: Expense approval board with category swimlanes
-- **Analytics**: Budget utilization, approval cycle time, expense breakdown, bottlenecks
+- **Dashboards**: Budget utilization, approval cycle time, expense breakdown, bottlenecks
 
 ## Structure
 
 ```
 .kiket/
-├── project.yaml           # Definition metadata
+├── workspace.yaml           # Definition metadata
 ├── case_types.yaml       # Expense case type
 ├── workflows/
 │   └── expense.yaml       # Expense approval workflow
